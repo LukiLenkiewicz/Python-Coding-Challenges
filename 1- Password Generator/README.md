@@ -1,0 +1,1 @@
+Program generujący hasło
