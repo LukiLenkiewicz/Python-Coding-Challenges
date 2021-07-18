@@ -1,0 +1,1 @@
+FizzBuzz i nie wiem co więcej napisać
