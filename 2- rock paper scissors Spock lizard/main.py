@@ -1,8 +1,8 @@
 from random import randint
 
-moves = ["Paper", "Rock", "Scissors", "Spock", "Lizard", "Stop"]
+MOVES = ["Paper", "Rock", "Scissors", "Spock", "Lizard", "Stop"]
 
-beats = {
+BEATS = {
     "Paper": ["Rock", "Spock"],
     "Rock": ["Scissors", "Lizard"],
     "Scissors": ["Paper", "Lizard"],
@@ -15,7 +15,7 @@ def player_turn():
     player_move = input()
     player_move = player_move.title()
 
-    while player_move not in moves and player_move != "Stop":
+    while player_move not in MOVES and player_move != "Stop":
         print("Zły ruch, spróbuj ponownie: ")
         player_move = input()
         player_move = player_move.title()
@@ -31,14 +31,14 @@ def gameplay():
     game_on = True
     while game_on:
         player_move = player_turn()
-        computer_move = moves[randint(0, 4)]
+        computer_move = MOVES[randint(0, 4)]
         if player_move == "Stop":
             game_on = False
 
         if game_on:
-            if computer_move in beats[player_move]:
+            if computer_move in BEATS[player_move]:
                 player_points += 1
-            elif player_move in beats[computer_move]:
+            elif player_move in BEATS[computer_move]:
                 computer_points += 1
             else:
                 print("Remis")
