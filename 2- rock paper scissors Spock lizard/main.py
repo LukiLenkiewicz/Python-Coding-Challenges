@@ -10,22 +10,27 @@ beats = {
     "Lizard": ["Paper", "Spock"]
 }
 
-print('Paper\nRock\nScissors\nSpock\nLizard\nWybierz jedną z powyższych figur lub wpisz "Stop" aby zakończyć program: ')
+
+def player_turn():
+    player_move = input()
+    player_move = player_move.title()
+
+    while player_move not in moves and player_move != "Stop":
+        print("Zły ruch, spróbuj ponownie: ")
+        player_move = input()
+        player_move = player_move.title()
+
+    return player_move
 
 
 def gameplay():
+    print('Paper\nRock\nScissors\nSpock\nLizard\nWybierz jedną z powyższych figur lub wpisz "Stop" aby zakończyć'
+          ' program: ')
     player_points = 0
     computer_points = 0
     game_on = True
     while game_on:
-        player_move = input()
-        player_move = player_move.title()
-
-        while player_move not in moves and player_move != "Stop":
-            print("Zły ruch, spróbuj ponownie: ")
-            player_move = input()
-            player_move = player_move.title()
-
+        player_move = player_turn()
         computer_move = moves[randint(0, 4)]
         if player_move == "Stop":
             game_on = False
@@ -39,5 +44,6 @@ def gameplay():
                 print("Remis")
 
         print(f"Punkty gracza: {player_points}\nPunkty komputera: {computer_points}")
+
 
 gameplay()
