@@ -1,6 +1,6 @@
-from random import randint
+from random import choice
 
-MOVES = ["Paper", "Rock", "Scissors", "Spock", "Lizard", "Stop"]
+MOVES = ["Paper", "Rock", "Scissors", "Spock", "Lizard"]
 
 BEATS = {
     "Paper": ["Rock", "Spock"],
@@ -13,37 +13,41 @@ BEATS = {
 
 def player_turn():
     player_move = input()
-    player_move = player_move.title()
+    player_move = player_move.capitalize()
 
     while player_move not in MOVES and player_move != "Stop":
         print("Zły ruch, spróbuj ponownie: ")
         player_move = input()
-        player_move = player_move.title()
+        player_move = player_move.capitalize()
 
     return player_move
 
 
 def gameplay():
-    print('Paper\nRock\nScissors\nSpock\nLizard\nWybierz jedną z powyższych figur lub wpisz "Stop" aby zakończyć'
-          ' program: ')
+
     player_points = 0
     computer_points = 0
-    game_on = True
-    while game_on:
+
+    while True:
+        for move in MOVES:
+            print(move, end='\t')
+        print('\nWybierz jedną z powyższych figur lub wpisz "Stop" aby zakończyć: ')
+
         player_move = player_turn()
-        computer_move = MOVES[randint(0, 4)]
+        computer_move = choice(MOVES)
         if player_move == "Stop":
-            game_on = False
+            break
 
-        if game_on:
-            if computer_move in BEATS[player_move]:
-                player_points += 1
-            elif player_move in BEATS[computer_move]:
-                computer_points += 1
-            else:
-                print("Remis")
+        if computer_move in BEATS[player_move]:
+            player_points += 1
+            print(f"{player_move} beats {computer_move}")
+        elif player_move in BEATS[computer_move]:
+            computer_points += 1
+            print(f"{computer_move} beats {player_move}")
+        else:
+            print("Remis")
 
-        print(f"Punkty gracza: {player_points}\nPunkty komputera: {computer_points}")
+        print(f"Punkty gracza: {player_points}\nPunkty komputera: {computer_points}\n")
 
 
 gameplay()
