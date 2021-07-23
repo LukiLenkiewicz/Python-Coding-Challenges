@@ -1,0 +1,1 @@
+Symulator rzutu koścmi, daje użytkownikowi do dyspozycji 4 kości.
