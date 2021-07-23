@@ -46,14 +46,22 @@ def compare_moves(player_move, computer_move, player_points, computer_points):
         return player_points, computer_points
 
 
+def display_moves():
+    for move in MOVES:
+        print(move, end='\t')
+    print(f'\nWybierz jedną z powyższych figur lub wpisz "{USER_EXIT_COMMAND}" aby zakończyć: ')
+
+
+def display_score(player_points, computer_points):
+    print(f"Punkty gracza: {player_points}\nPunkty komputera: {computer_points}\n")
+
+
 def gameplay():
     player_points = 0
     computer_points = 0
 
     while True:
-        for move in MOVES:
-            print(move, end='\t')
-        print(f'\nWybierz jedną z powyższych figur lub wpisz "{USER_EXIT_COMMAND}" aby zakończyć: ')
+        display_moves()
 
         player_move = player_turn()
         computer_move = choice(MOVES)
@@ -62,7 +70,7 @@ def gameplay():
 
         player_points, computer_points = compare_moves(player_move, computer_move, player_points, computer_points)
 
-        print(f"Punkty gracza: {player_points}\nPunkty komputera: {computer_points}\n")
+        display_score(player_points, computer_points)
 
 
 gameplay()
