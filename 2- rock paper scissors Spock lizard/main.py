@@ -25,17 +25,24 @@ def player_turn():
     return player_move
 
 
+def print_result(winner_move, loser_move):
+    if winner_move != loser_move:
+        print(f"{winner_move} beats {loser_move}")
+    else:
+        print("Remis")
+
+
 def compare_moves(player_move, computer_move, player_points, computer_points):
     if computer_move in BEATS[player_move]:
-        print(f"{player_move} beats {computer_move}")
+        print_result(player_move, computer_move)
         return player_points + 1, computer_points
 
     elif player_move in BEATS[computer_move]:
-        print(f"{computer_move} beats {player_move}")
+        print_result(computer_move, player_move)
         return player_points, computer_points + 1
 
     else:
-        print("Remis")
+        print_result(player_move, computer_move)
         return player_points, computer_points
 
 
