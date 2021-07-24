@@ -1,0 +1,1 @@
+Aplikacja mówiąca użytkownikowi czy jego BMI jest odpowiednie w zależności od podanych przez niego parametrów.
