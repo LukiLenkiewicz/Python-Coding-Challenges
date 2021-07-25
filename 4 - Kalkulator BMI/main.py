@@ -19,13 +19,16 @@ FEMALE_BMI_RANGE = {
     inf: [24, 29, 34, 44],
 }
 
+SEX_MALE = "male"
+SEX_FEMALE = "female"
+
 
 def return_table_of_values():
     while True:
-        sex = input("Podaj swoją płeć(male/female): ")
-        if sex == "male":
+        sex = input(f"Podaj swoją płeć({SEX_MALE}/{SEX_FEMALE}): ")
+        if sex == SEX_MALE:
             return MALE_BMI_RANGE
-        elif sex == "female":
+        elif sex == SEX_FEMALE:
             return FEMALE_BMI_RANGE
         else:
             print("Podano nieprawidłową wartość!")
@@ -36,13 +39,13 @@ def return_list_of_values(values):
     for key in values.keys():
         if age <= key:
             return values
-        
+
 
 def calculate_bmi():
     height = float(input("Podaj swój wzrost w centymetrach: "))
     height /= 100
     mass = float(input("Podaj masę swojego ciała w kilogramach: "))
-    return round(mass/(height**2), 2)
+    return round(mass / (height ** 2), 2)
 
 
 def bmi_calc():
