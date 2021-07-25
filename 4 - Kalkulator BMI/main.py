@@ -20,24 +20,37 @@ FEMALE_BMI_RANGE = {
 }
 
 
-def bmi_calc():
-    sex = input("Podaj swoją płeć(male/female): ")
-    list_of_values = {}
-    if sex == "male":
-        list_of_values = MALE_BMI_RANGE
-    else:
-        list_of_values = FEMALE_BMI_RANGE
+def return_table_of_values():
+    while True:
+        sex = input("Podaj swoją płeć(male/female): ")
+        if sex == "male":
+            return MALE_BMI_RANGE
+        elif sex == "female":
+            return FEMALE_BMI_RANGE
+        else:
+            print("Podano nieprawidłową wartość!")
+
+
+def return_list_of_values(values):
     age = int(input("Podaj swój wiek: "))
-    for key in list_of_values.keys():
+    for key in values.keys():
         if age <= key:
-            list_of_values = list_of_values[key]
-            break
+            return values
+        
+
+def calculate_bmi():
     height = float(input("Podaj swój wzrost w centymetrach: "))
     height /= 100
     mass = float(input("Podaj masę swojego ciała w kilogramach: "))
-    bmi = round(mass/(height**2), 2)
+    return round(mass/(height**2), 2)
 
-    print(f"Twoje BMI wynosi {bmi}")
+
+def bmi_calc():
+    table_of_values = return_table_of_values()
+    list_of_values = return_list_of_values(table_of_values)
+    bmi = calculate_bmi()
+
+    print(f"Twoje BMI wynosi {bmi}.")
     if bmi < list_of_values[0]:
         print("Przy twoim wzroście oznacza to, że masz niedowagę.")
     elif bmi < list_of_values[1]:
