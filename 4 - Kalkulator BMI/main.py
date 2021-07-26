@@ -7,6 +7,7 @@ MALE_BMI_RANGE = {
     54: [23, 28, 33, 43],
     64: [24, 29, 34, 44],
     inf: [25, 30, 35, 45]
+
 }
 
 FEMALE_BMI_RANGE = {
@@ -33,11 +34,12 @@ def return_table_of_values():
             print("Podano nieprawidłową wartość!")
 
 
-def return_list_of_values(values):
+def return_list_of_values():
+    values = return_table_of_values()
     age = int(input("Podaj swój wiek: "))
     for key in values.keys():
         if age <= key:
-            return values
+            return list(values)
 
 
 def calculate_bmi():
@@ -48,8 +50,7 @@ def calculate_bmi():
 
 
 def bmi_calc():
-    table_of_values = return_table_of_values()
-    list_of_values = return_list_of_values(table_of_values)
+    list_of_values = return_list_of_values()
     bmi = calculate_bmi()
 
     print(f"Twoje BMI wynosi {bmi}.")
