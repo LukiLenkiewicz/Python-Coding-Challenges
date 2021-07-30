@@ -22,10 +22,8 @@ def input_data():
             error_message += 'Niepoprawna długość miesięcy.\n'
         else:
             return list(map(int, compared_date))
-
-    
-
-
+        
+        
 def days_correction(today, given_day):
     correction = 0
     if today[0] % 4 == 0 or today[0] % 400 == 0:
