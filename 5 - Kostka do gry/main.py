@@ -6,7 +6,7 @@ MAX_NUM_OF_DOTS = 6
 MAX_NUM_OF_DICES = 4
 MIN_NUM_OF_DICES = 1
 
-CONTINUE_THE_GAME = ['y', 'yes', 't', 'tak']
+CONTINUE_THE_GAME_COMMANDS = ['y', 'yes', 't', 'tak']
 USER_EXIT_COMMANDS = ['n', 'no', 'nie']
 
 
@@ -22,9 +22,9 @@ def choose_number_of_dices():
 
 def continue_the_game():
     while True:
-        answer = input(f"Czy chcesz grać dalej?\nWpisz {', '.join(CONTINUE_THE_GAME)} aby kontynuować\nlub "
+        answer = input(f"Czy chcesz grać dalej?\nWpisz {', '.join(CONTINUE_THE_GAME_COMMANDS)} aby kontynuować\nlub "
                        f"{', '.join(USER_EXIT_COMMANDS)} aby zakończyć.")
-        if answer in CONTINUE_THE_GAME:
+        if answer in CONTINUE_THE_GAME_COMMANDS:
             return True
         elif answer in USER_EXIT_COMMANDS:
             return False
@@ -42,3 +42,4 @@ def throw():
 
 
 throw()
+
