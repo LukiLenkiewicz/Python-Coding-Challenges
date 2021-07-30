@@ -14,27 +14,32 @@ def input_data():
     return list(map(int, compared_date))
 
 
-def calculate_days(today, not_today):
+def days_correction(today, given_day):
+    correction = 0
+    if today[0] % 4 == 0 or today[0] % 400 == 0:
+        for month in LEAP_YEAR[:today[1] - 1]:
+            correction += month
+    else:
+        for month in REGULAR_YEAR[:today[1] - 1]:
+            correction += month
+    if given_day[0] % 4 == 0 or given_day[0] % 400 == 0:
+        for month in LEAP_YEAR[:given_day[1] - 1]:
+            correction -= month
+    else:
+        for month in REGULAR_YEAR[:given_day[1] - 1]:
+            correction -= month
+    correction = correction + today[2] - given_day[2]
+    return correction
+
+
+def calculate_days(today, given_day):
     days_passed = 0
-    for i in range(today[0] - not_today[0]):
-        if (not_today[0] + i) % 4 == 0 or (not_today[0] + i) % 400 == 0:
+    for i in range(today[0] - given_day[0]):
+        if (given_day[0] + i) % 4 == 0 or (given_day[0] + i) % 400 == 0:
             days_passed += 366
         else:
             days_passed += 365
-    if today[0] % 4 == 0 or today[0] % 400 == 0:
-        for month in LEAP_YEAR[:today[1] - 1]:
-            days_passed += month
-    else:
-        for month in REGULAR_YEAR[:today[1] - 1]:
-            days_passed += month
-
-    if not_today[0] % 4 == 0 or not_today[0] % 400 == 0:
-        for month in LEAP_YEAR[:not_today[1] - 1]:
-            days_passed -= month
-    else:
-        for month in REGULAR_YEAR[:not_today[1] - 1]:
-            days_passed -= month
-    days_passed = days_passed + today[2] - not_today[2]
+    days_passed += days_correction(today, given_day)
     return days_passed
 
 
