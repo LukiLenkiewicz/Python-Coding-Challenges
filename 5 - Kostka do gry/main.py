@@ -7,37 +7,26 @@ MAX_NUM_OF_DICES = 4
 MIN_NUM_OF_DICES = 1
 
 CONTINUE_THE_GAME = ['y', 'yes', 't', 'tak']
-STOP_THE_GAME = ['n', 'no', 'nie']
+USER_EXIT_COMMANDS = ['n', 'no', 'nie']
 
 
 def choose_number_of_dices():
     while True:
-        number_of_throws = int(input("Masz 4 kości, iloma chcesz rzucić? "))
-        if number_of_throws <= MAX_NUM_OF_DICES and number_of_throws >= MIN_NUM_OF_DICES:
-            return number_of_throws
-        else:
+        number_of_throws = float(input("Masz 4 kości, iloma chcesz rzucić? "))
+        if int(number_of_throws) > MAX_NUM_OF_DICES or int(number_of_throws) < MIN_NUM_OF_DICES or \
+           int(number_of_throws) != float(number_of_throws):
             print("Nieodpowiednia liczba kości. Spróbuj ponownie.")
-
-
-def print_message():
-    print("Czy chcesz grać dalej? ")
-    print("Wpisz: ", end='')
-    for word in CONTINUE_THE_GAME:
-        print(f"{word}, ", end='')
-    print("żeby kontynuować")
-    print("Lub ", end='')
-    for word in STOP_THE_GAME:
-        print(f"{word}, ", end='')
-    print("żeby zakończyć")
-    return input()
+        else:
+            return int(number_of_throws)
 
 
 def continue_the_game():
     while True:
-        answer = print_message()
+        answer = input(f"Czy chcesz grać dalej?\nWpisz {', '.join(CONTINUE_THE_GAME)} aby kontynuować\nlub "
+                       f"{', '.join(USER_EXIT_COMMANDS)} aby zakończyć.")
         if answer in CONTINUE_THE_GAME:
             return True
-        elif answer in STOP_THE_GAME:
+        elif answer in USER_EXIT_COMMANDS:
             return False
         else:
             print("Podano nieprawidłową wartość, spróbuj ponownie.")
