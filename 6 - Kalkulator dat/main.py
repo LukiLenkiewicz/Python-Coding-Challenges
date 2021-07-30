@@ -28,8 +28,7 @@ def days_correction(today, given_day):
     else:
         for month in REGULAR_YEAR[:given_day[1] - 1]:
             correction -= month
-    correction = correction + today[2] - given_day[2]
-    return correction
+    return correction + today[2] - given_day[2]
 
 
 def calculate_days(today, given_day):
