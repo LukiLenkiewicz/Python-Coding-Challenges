@@ -1,7 +1,7 @@
 import time
 
-REGULAR_YEAR = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-LEAP_YEAR = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+MONTHS_IN_REGULAR_YEAR = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+MONTHS_IN_LEAP_YEAR = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
 HOURS_IN_A_DAY = 24
 MINUTES_IN_ONE_HOUR = 60
@@ -11,32 +11,42 @@ NR_OF_DATE_PARAMETERS = 3
 
 
 def input_data():
-    
+
     while True:
         compared_date = input("Podaj datę od której chcesz policzyć czas w formacie rrrr-mm-dd: ")
         compared_date = compared_date.split('-')
+
         error_message = ''
+        if is_integer(compared_date):
+            error_message += 'Data może zawierać tylko liczby całkowite.\n'
+            print(error_message)
         if len(compared_date) != NR_OF_DATE_PARAMETERS:
             error_message += 'Niepoprawny zapis.\n'
-        elif int(compared_date[2]) > 12 and int(compared_date[2]) < 1:
-            error_message += 'Niepoprawna długość miesięcy.\n'
-        else:
+        print(error_message, " Spróbuj jeszcze raz.")
+        if len(error_message) == 0:
             return list(map(int, compared_date))
-        
-        
+
+
+def is_integer(arr):
+    for num in arr:
+        if not num.isdigit():
+            return True
+    return False
+
+
 def days_correction(today, given_day):
     correction = 0
     if today[0] % 4 == 0 or today[0] % 400 == 0:
-        for month in LEAP_YEAR[:today[1] - 1]:
+        for month in MONTHS_IN_LEAP_YEAR[:today[1] - 1]:
             correction += month
     else:
-        for month in REGULAR_YEAR[:today[1] - 1]:
+        for month in MONTHS_IN_REGULAR_YEAR[:today[1] - 1]:
             correction += month
     if given_day[0] % 4 == 0 or given_day[0] % 400 == 0:
-        for month in LEAP_YEAR[:given_day[1] - 1]:
+        for month in MONTHS_IN_LEAP_YEAR[:given_day[1] - 1]:
             correction -= month
     else:
-        for month in REGULAR_YEAR[:given_day[1] - 1]:
+        for month in MONTHS_IN_REGULAR_YEAR[:given_day[1] - 1]:
             correction -= month
     return correction + today[2] - given_day[2]
 
