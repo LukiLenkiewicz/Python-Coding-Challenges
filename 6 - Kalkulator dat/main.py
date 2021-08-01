@@ -15,17 +15,14 @@ def input_data():
     while True:
         compared_date = input("Podaj datę od której chcesz policzyć czas w formacie rrrr-mm-dd: ")
         compared_date = compared_date.split('-')
-        error_message = ''
-        if not is_integer(compared_date):
-            error_message += 'Data może zawierać tylko liczby całkowite.\n'
         if len(compared_date) != NR_OF_DATE_PARAMETERS:
-            error_message += 'Niepoprawny zapis.\n'
-        if not checking_day_correctness(compared_date):
-            error_message += 'Niepoprawny numer dnia lub miesiąca.\n'
-        if len(error_message) == 0:
-            return list(map(int, compared_date))
+            print('Niepoprawny zapis.')
+        elif not is_integer(compared_date):
+            print('Data może zawierać tylko liczby całkowite.')
+        elif not checking_day_correctness(compared_date):
+            print('Niepoprawny numer dnia lub miesiąca.')
         else:
-            print(f"{error_message} Spróbuj jeszcze raz.")
+            return list(map(int, compared_date))
 
 
 def is_integer(arr):
@@ -39,6 +36,7 @@ def checking_day_correctness(arr):
     year = int(arr[0])
     month = int(arr[1])
     day = int(arr[2])
+
     if month in NR_OF_MONTHS:
         if year % 4 == 0 or year % 400 == 0:
             if MONTHS_IN_LEAP_YEAR[month - 1] < day:
