@@ -12,12 +12,15 @@ USER_EXIT_COMMANDS = ['n', 'no', 'nie']
 
 def choose_number_of_dices():
     while True:
-        number_of_throws = float(input("Masz 4 kości, iloma chcesz rzucić? "))
-        if int(number_of_throws) > MAX_NUM_OF_DICES or int(number_of_throws) < MIN_NUM_OF_DICES or \
-           int(number_of_throws) != float(number_of_throws):
-            print("Nieodpowiednia liczba kości. Spróbuj ponownie.")
+        number_of_throws = input("Masz 4 kości, iloma chcesz rzucić? ")
+        if number_of_throws.isdigit():
+            number_of_throws = int(number_of_throws)
+            if number_of_throws > MAX_NUM_OF_DICES or number_of_throws < MIN_NUM_OF_DICES:
+                print("Nieodpowiednia liczba kości. Spróbuj ponownie.")
+            else:
+                return int(number_of_throws)
         else:
-            return int(number_of_throws)
+            print("Podaj liczbę całkowitą.")
 
 
 def continue_the_game():
@@ -42,4 +45,3 @@ def throw():
 
 
 throw()
-
