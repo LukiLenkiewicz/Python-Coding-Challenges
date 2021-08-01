@@ -2,6 +2,7 @@ import time
 
 MONTHS_IN_REGULAR_YEAR = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 MONTHS_IN_LEAP_YEAR = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+NR_OF_MONTHS = [i for i in range(1, 13)]
 
 HOURS_IN_A_DAY = 24
 MINUTES_IN_ONE_HOUR = 60
@@ -11,54 +12,43 @@ NR_OF_DATE_PARAMETERS = 3
 
 
 def input_data():
-
     while True:
         compared_date = input("Podaj datę od której chcesz policzyć czas w formacie rrrr-mm-dd: ")
         compared_date = compared_date.split('-')
         error_message = ''
-        if is_integer(compared_date):
+        if not is_integer(compared_date):
             error_message += 'Data może zawierać tylko liczby całkowite.\n'
-            print(error_message)
         if len(compared_date) != NR_OF_DATE_PARAMETERS:
             error_message += 'Niepoprawny zapis.\n'
-
+        if not checking_day_correctness(compared_date):
+            error_message += 'Niepoprawny numer dnia lub miesiąca.\n'
         if len(error_message) == 0:
             return list(map(int, compared_date))
         else:
-            print(error_message, " Spróbuj jeszcze raz.")
+            print(f"{error_message} Spróbuj jeszcze raz.")
 
 
 def is_integer(arr):
     for num in arr:
         if not num.isdigit():
-            return True
-    return False
-
-
-def checking_month_correctness(year, month, day):
-    if year % 4 == 0 or year % 400 == 0:
-        if MONTHS_IN_LEAP_YEAR[month - 1] < day:
-            return False
-    else:
-        if MONTHS_IN_REGULAR_YEAR[month - 1] < day:
             return False
     return True
-# def checking_data_correctness(date):
-#     date = date.split('-')
-#     error_message = ''
-#     if is_integer(date):
-#         error_message += 'Data może zawierać tylko liczby całkowite.\n'
-#         print(error_message)
-#     if len(date) != NR_OF_DATE_PARAMETERS:
-#         error_message += 'Niepoprawny zapis.\n'
-#
-#     return error_message
-#
-#
-# def checking_month_correctness(year, month, day):
-#     print(year)
-#     print(month)
-#     print(day)
+
+
+def checking_day_correctness(arr):
+    year = int(arr[0])
+    month = int(arr[1])
+    day = int(arr[2])
+    if month in NR_OF_MONTHS:
+        if year % 4 == 0 or year % 400 == 0:
+            if MONTHS_IN_LEAP_YEAR[month - 1] < day:
+                return False
+        else:
+            if MONTHS_IN_REGULAR_YEAR[month - 1] < day:
+                return False
+        return True
+    else:
+        return False
 
 
 def days_correction(today, given_day):
