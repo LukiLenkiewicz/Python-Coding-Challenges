@@ -2,22 +2,21 @@ import time
 
 MONTHS_IN_REGULAR_YEAR = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 MONTHS_IN_LEAP_YEAR = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-NR_OF_MONTHS = [i for i in range(1, 13)]
 
 HOURS_IN_A_DAY = 24
 MINUTES_IN_ONE_HOUR = 60
 SECONDS_IN_A_MINUTE = 60
 
-NR_OF_DATE_PARAMETERS = 3
+NO_OF_DATE_PARAMETERS = 3
 
 
 def input_data():
     while True:
         compared_date = input("Podaj datę od której chcesz policzyć czas w formacie rrrr-mm-dd: ")
         compared_date = compared_date.split('-')
-        if len(compared_date) != NR_OF_DATE_PARAMETERS:
+        if len(compared_date) != NO_OF_DATE_PARAMETERS:
             print('Niepoprawny zapis.')
-        elif not is_integer(compared_date):
+        elif not is_array_of_integers(compared_date):
             print('Data może zawierać tylko liczby całkowite.')
         elif not checking_day_correctness(compared_date):
             print('Niepoprawny numer dnia lub miesiąca.')
@@ -25,7 +24,7 @@ def input_data():
             return list(map(int, compared_date))
 
 
-def is_integer(arr):
+def is_array_of_integers(arr):
     for num in arr:
         if not num.isdigit():
             return False
@@ -37,7 +36,7 @@ def checking_day_correctness(arr):
     month = int(arr[1])
     day = int(arr[2])
 
-    if month in NR_OF_MONTHS:
+    if month in range(1, 13):
         if year % 4 == 0 or year % 400 == 0:
             if MONTHS_IN_LEAP_YEAR[month - 1] < day:
                 return False
