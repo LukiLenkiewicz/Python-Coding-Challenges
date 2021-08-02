@@ -26,9 +26,9 @@ SEX_FEMALE = "female"
 def return_table_of_values():
     while True:
         sex = input(f"Podaj swoją płeć({SEX_MALE}/{SEX_FEMALE}): ")
-        if sex == SEX_MALE:
+        if sex.lower() == SEX_MALE:
             return MALE_BMI_RANGE
-        elif sex == SEX_FEMALE:
+        elif sex.lower() == SEX_FEMALE:
             return FEMALE_BMI_RANGE
         else:
             print("Podano nieprawidłową wartość!")
@@ -36,17 +36,29 @@ def return_table_of_values():
 
 def return_list_of_values():
     values = return_table_of_values()
-    age = int(input("Podaj swój wiek: "))
+    age = input_age()
     for key in values.keys():
         if age <= key:
             return list(values)
 
 
+def input_age():
+    while True:
+        age = input("Podaj swój wiek: ")
+        if age.isdigit() and age != '0':
+            return int(age)
+        else:
+            print("Wiek musi być dodatnią liczbą całkowitą.")
+
+
 def calculate_bmi():
-    height = float(input("Podaj swój wzrost w centymetrach: "))
-    height /= 100
-    mass = float(input("Podaj masę swojego ciała w kilogramach: "))
-    return round(mass / (height ** 2), 2)
+    while True:
+        height = input("Podaj swój wzrost w centymetrach: ")
+        mass = input("Podaj masę swojego ciała w kilogramach: ")
+        if height.isdigit() and mass.isdigit():
+            return round(float(mass) / (float(height) ** 2), 2)
+        else:
+            print("Niepoprawny wzrost lub masa. Spróbuj ponownie.")
 
 
 def bmi_calc():
