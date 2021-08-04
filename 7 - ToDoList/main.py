@@ -1,6 +1,3 @@
-import json
-
-
 def todolist():
     tasks = {}
     user_command = ''
@@ -12,16 +9,19 @@ def todolist():
             tasks = add_task(tasks, user_command)
             print("Zadanie dodane z powodzeniem.\n")
         elif command_check.lower() == 'remove':
-            if int(split_user_command[1]) in list(tasks.keys()):
-                del tasks[int(split_user_command[1])]
+            if split_user_command[1] in list(tasks.keys()):
+                del tasks[split_user_command[1]]
                 print("Zadanie usunięte z powodzeniem\n")
             else:
                 print("Nie ma takiego ID.")
         elif command_check.lower() == 'resolve':
-            if int(split_user_command[1]) in list(tasks.keys()):
-                tasks[int(split_user_command[1])]['Status'] = 'Done'
+            if split_user_command[1] in list(tasks.keys()):
+                tasks[split_user_command[1]]['Status'] = 'Done'
+            else:
+                print("Nie ma takiego ID.")
         elif command_check.lower() == 'help':
-            print(f"add dodaje zadanie\nremove usuwa zadanie\nresolve oznacza zadanie jako wykonane\nhelp wyświetla pomoc\n")
+            print(f"add dodaje zadanie\nremove usuwa zadanie\nresolve oznacza zadanie jako wykonane\nhelp wyświetla"
+                  f" pomoc\n")
         elif user_command == 'exit':
             pass
         else:
@@ -33,8 +33,8 @@ def todolist():
 def add_task(tasks, task_description):
     task_id = 1
     while True:
-        if task_id not in list(tasks.keys()):
-            tasks[task_id] = {'Status': 'NEW', 'Description': task_description[4:]}
+        if str(task_id) not in list(tasks.keys()):
+            tasks[str(task_id)] = {'Status': 'NEW', 'Description': task_description[4:]}
             return tasks
         else:
             task_id += 1
