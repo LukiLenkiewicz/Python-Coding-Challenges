@@ -1,10 +1,15 @@
+import json
+
+
 def todolist():
-    tasks = {}
+    with open('tasks.json', 'r') as file:
+        tasks = json.loads(file)
     user_command = ''
     while user_command != 'exit':
         user_command = input('Podaj komendę użytkownika: ')
         split_user_command = user_command.split()
         command_check = split_user_command[0]
+        """ten ciag ifów może być osobną funkcją w sumie"""
         if command_check.lower() == 'add':
             tasks = add_task(tasks, user_command)
             print("Zadanie dodane z powodzeniem.\n")
@@ -26,8 +31,14 @@ def todolist():
             pass
         else:
             print("Niepoprawna komenda użytkownika\n")
-        for task_id, j in tasks.items():
-            print(task_id, ' ', j['Status'], ' ', j['Description'])
+        if len(tasks) == 0:
+            print("Lista zadań jest pusta.")
+        else:
+            for task_id, j in tasks.items():
+                print(task_id, ' ', j['Status'], ' ', j['Description'])
+
+        with open("tasks.json", "w") as file:
+            json.dump(tasks, file)
 
 
 def add_task(tasks, task_description):
