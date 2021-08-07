@@ -5,24 +5,13 @@ JSON_NAME = 'tasks.json'
 
 
 def todolist():
-    
-    if os.path.exists(JSON_NAME):
-        with open(JSON_NAME, 'r') as file:
-            tasks = json.load(file)
-    else:
-        print('Tworzenie pustej listy zadań')
-        tasks = {}
-        with open(JSON_NAME, 'w') as file:
-            json.dump(tasks, file)
-            
+    tasks = creating_new_file()
     print_tasks(tasks)
-    
     user_command = ''
     while user_command != 'exit':
         user_command = input('Podaj komendę użytkownika: ')
         split_user_command = user_command.split()
         command_check = split_user_command[0]
-        """ten ciag ifów może być osobną funkcją w sumie"""
         if command_check.lower() == 'add':
             tasks = add_task(tasks, user_command)
             print("Zadanie dodane z powodzeniem.\n")
@@ -44,9 +33,20 @@ def todolist():
             pass
         else:
             print("Niepoprawna komenda użytkownika\n")
-        
-        with open("tasks.json", "w") as file:
+
+        save_task(tasks)
+
+
+def creating_new_file():
+    if os.path.exists(JSON_NAME):
+        with open(JSON_NAME, 'r') as file:
+            return json.load(file)
+    else:
+        print('Tworzenie pustej listy zadań')
+        tasks = {}
+        with open(JSON_NAME, 'w') as file:
             json.dump(tasks, file)
+        return tasks
 
 
 def add_task(tasks, task_description):
@@ -65,6 +65,11 @@ def print_tasks(tasks):
     else:
         for task_id, j in tasks.items():
             print(task_id, ' ', j['Status'], ' ', j['Description'])
+
+
+def save_task(tasks):
+    with open(JSON_NAME, "w") as file:
+        json.dump(tasks, file)
 
 
 todolist()
