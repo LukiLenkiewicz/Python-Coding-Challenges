@@ -6,35 +6,7 @@ JSON_NAME = 'tasks.json'
 
 def todolist():
     tasks = creating_new_file()
-    print_tasks(tasks)
-    user_command = ''
-    while user_command != 'exit':
-        user_command = input('Podaj komendę użytkownika: ')
-        split_user_command = user_command.split()
-        command_check = split_user_command[0]
-        if command_check.lower() == 'add':
-            tasks = add_task(tasks, user_command)
-            print("Zadanie dodane z powodzeniem.\n")
-        elif command_check.lower() == 'remove':
-            if split_user_command[1] in list(tasks.keys()):
-                del tasks[split_user_command[1]]
-                print("Zadanie usunięte z powodzeniem\n")
-            else:
-                print("Nie ma takiego ID.")
-        elif command_check.lower() == 'resolve':
-            if split_user_command[1] in list(tasks.keys()):
-                tasks[split_user_command[1]]['Status'] = 'Done'
-            else:
-                print("Nie ma takiego ID.")
-        elif command_check.lower() == 'help':
-            print(f"add dodaje zadanie\nremove usuwa zadanie\nresolve oznacza zadanie jako wykonane\nhelp wyświetla"
-                  f" pomoc\n")
-        elif user_command == 'exit':
-            pass
-        else:
-            print("Niepoprawna komenda użytkownika\n")
-
-        save_task(tasks)
+    user_interface(tasks)
 
 
 def creating_new_file():
@@ -59,12 +31,53 @@ def add_task(tasks, task_description):
             task_id += 1
 
 
+def user_interface(tasks):
+    user_command = ''
+    while user_command != 'exit':
+        print_tasks(tasks)
+        checking_user_input(tasks, user_command)
+        save_task()
+
+
 def print_tasks(tasks):
     if len(tasks) == 0:
         print("Lista zadań jest pusta.")
     else:
         for task_id, j in tasks.items():
             print(task_id, ' ', j['Status'], ' ', j['Description'])
+
+
+def splitting_user_input():
+    command = input('Podaj komendę użytkownika lub wpisz "help" aby uzyskać pomoc: ')
+    command = command.split()
+    return command[0], command
+
+
+def checking_user_input(tasks, user_command):
+    command_check, split_user_command = splitting_user_input()
+    if command_check.lower() == 'add':
+        tasks = add_task(tasks, user_command)
+        print("Zadanie dodane z powodzeniem.\n")
+    elif command_check.lower() == 'remove':
+        if split_user_command[1] in list(tasks.keys()):
+            del tasks[split_user_command[1]]
+            print("Zadanie usunięte z powodzeniem\n")
+        else:
+            print("Nie ma takiego ID.")
+    elif command_check.lower() == 'resolve':
+        if split_user_command[1] in list(tasks.keys()):
+            tasks[split_user_command[1]]['Status'] = 'Done'
+        else:
+            print("Nie ma takiego ID.")
+    elif command_check.lower() == 'help':
+        print(f"add dodaje zadanie\nremove usuwa zadanie\nresolve oznacza zadanie jako wykonane\nhelp wyświetla"
+              f" pomoc\n")
+    elif user_command == 'exit':
+        pass
+    else:
+        print("Niepoprawna komenda użytkownika\n")
+
+    return tasks
 
 
 def save_task(tasks):
