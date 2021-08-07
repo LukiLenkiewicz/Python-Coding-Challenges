@@ -6,7 +6,11 @@ JSON_NAME = 'tasks.json'
 
 def todolist():
     tasks = creating_new_file()
-    user_interface(tasks)
+    user_command = ''
+    while user_command != 'exit':
+        print_tasks(tasks)
+        tasks = checking_user_input(tasks)
+        save_task(tasks)
 
 
 def creating_new_file():
@@ -31,14 +35,6 @@ def add_task(tasks, task_description):
             task_id += 1
 
 
-def user_interface(tasks):
-    user_command = ''
-    while user_command != 'exit':
-        print_tasks(tasks)
-        checking_user_input(tasks, user_command)
-        save_task()
-
-
 def print_tasks(tasks):
     if len(tasks) == 0:
         print("Lista zadań jest pusta.")
@@ -47,14 +43,14 @@ def print_tasks(tasks):
             print(task_id, ' ', j['Status'], ' ', j['Description'])
 
 
-def splitting_user_input():
-    command = input('Podaj komendę użytkownika lub wpisz "help" aby uzyskać pomoc: ')
+def splitting_user_input(command):
     command = command.split()
     return command[0], command
 
 
-def checking_user_input(tasks, user_command):
-    command_check, split_user_command = splitting_user_input()
+def checking_user_input(tasks):
+    user_command = input('Podaj komendę użytkownika lub wpisz "help" aby uzyskać pomoc: ')
+    command_check, split_user_command = splitting_user_input(user_command)
     if command_check.lower() == 'add':
         tasks = add_task(tasks, user_command)
         print("Zadanie dodane z powodzeniem.\n")
@@ -76,7 +72,6 @@ def checking_user_input(tasks, user_command):
         pass
     else:
         print("Niepoprawna komenda użytkownika\n")
-
     return tasks
 
 
