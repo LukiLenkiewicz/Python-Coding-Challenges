@@ -1,9 +1,22 @@
 import json
+import os
+
+JSON_NAME = 'tasks.json'
 
 
 def todolist():
-    with open('tasks.json', 'r') as file:
-        tasks = json.loads(file)
+    
+    if os.path.exists(JSON_NAME):
+        with open(JSON_NAME, 'r') as file:
+            tasks = json.load(file)
+    else:
+        print('Tworzenie pustej listy zadań')
+        tasks = {}
+        with open(JSON_NAME, 'w') as file:
+            json.dump(tasks, file)
+            
+    print_tasks(tasks)
+    
     user_command = ''
     while user_command != 'exit':
         user_command = input('Podaj komendę użytkownika: ')
@@ -31,12 +44,7 @@ def todolist():
             pass
         else:
             print("Niepoprawna komenda użytkownika\n")
-        if len(tasks) == 0:
-            print("Lista zadań jest pusta.")
-        else:
-            for task_id, j in tasks.items():
-                print(task_id, ' ', j['Status'], ' ', j['Description'])
-
+        
         with open("tasks.json", "w") as file:
             json.dump(tasks, file)
 
@@ -49,6 +57,14 @@ def add_task(tasks, task_description):
             return tasks
         else:
             task_id += 1
+
+
+def print_tasks(tasks):
+    if len(tasks) == 0:
+        print("Lista zadań jest pusta.")
+    else:
+        for task_id, j in tasks.items():
+            print(task_id, ' ', j['Status'], ' ', j['Description'])
 
 
 todolist()
