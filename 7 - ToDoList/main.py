@@ -9,7 +9,8 @@ def todolist():
     user_command = ''
     while user_command != 'exit':
         print_tasks(tasks)
-        tasks = checking_user_input(tasks)
+        user_command = input('Podaj komendę użytkownika lub wpisz "help" aby uzyskać pomoc: ')
+        tasks = checking_user_input(tasks, user_command)
         save_task(tasks)
 
 
@@ -48,8 +49,7 @@ def splitting_user_input(command):
     return command[0], command
 
 
-def checking_user_input(tasks):
-    user_command = input('Podaj komendę użytkownika lub wpisz "help" aby uzyskać pomoc: ')
+def checking_user_input(tasks, user_command):
     command_check, split_user_command = splitting_user_input(user_command)
     if command_check.lower() == 'add':
         tasks = add_task(tasks, user_command)
@@ -66,8 +66,8 @@ def checking_user_input(tasks):
         else:
             print("Nie ma takiego ID.")
     elif command_check.lower() == 'help':
-        print(f"add dodaje zadanie\nremove usuwa zadanie\nresolve oznacza zadanie jako wykonane\nhelp wyświetla"
-              f" pomoc\n")
+        print(f'"add + ID" dodaje zadanie\n"remove + ID" usuwa zadanie\n"resolve + ID" oznacza zadanie jako wykonane'
+              f'\nhelp wyświetla pomoc\n')
     elif user_command == 'exit':
         pass
     else:
@@ -76,7 +76,7 @@ def checking_user_input(tasks):
 
 
 def save_task(tasks):
-    with open(JSON_NAME, "w") as file:
+    with open(JSON_NAME, 'w') as file:
         json.dump(tasks, file)
 
 
