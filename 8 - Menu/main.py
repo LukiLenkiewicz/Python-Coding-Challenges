@@ -1,26 +1,26 @@
-LOGIN = 'login'
-HELP = 'help'
-EXIT = 'exit'
-ESC = 'esc'
-
-
 class Menu:
+    LOGIN = 'login'
+    HELP = 'help'
+    EXIT = 'exit'
+    ESC = 'esc'
+
     def menu(self):
         user_command = ''
-        while user_command != EXIT:
-            user_command = input(f'"{LOGIN}" otwiera menu logowania\n"{HELP}" wyświetla pomoc\n"{EXIT}" opuszcza program\n')
-            if user_command == LOGIN:
+        while user_command != self.EXIT:
+            user_command = input(f'"{self.LOGIN}" otwiera menu logowania\n"{self.HELP}" wyświetla pomoc\n"{self.EXIT}" '
+                                 f'opuszcza program\n')
+            if user_command == self.LOGIN:
                 self.login()
-            elif user_command == HELP:
+            elif user_command == self.HELP:
                 self.help_interface()
-            elif user_command == EXIT:
+            elif user_command == self.EXIT:
                 pass
             else:
                 print("Niepoprawna komenda użytkownika")
 
     def login(self):
         user_name = input('Podaj dane logowania lub wpisz "esc aby wyjść: ')
-        if user_name != ESC:
+        if user_name != self.ESC:
             print(f"Witaj {user_name}")
         self.menu()
 
@@ -29,7 +29,7 @@ class Menu:
               " calida aqua. Et Joseph dixit ad eum: Elegantia Gallia. Ex Epistola ad Corinthos: submota olivarum! Amen")
         while True:
             user_command = input('wpisz "esc" aby wyjść ')
-            if user_command == ESC:
+            if user_command == self.ESC:
                 self.menu()
             else:
                 print('Niepoprawna komenda użytkownika.')
