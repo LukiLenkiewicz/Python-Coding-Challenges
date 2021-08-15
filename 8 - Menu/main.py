@@ -5,21 +5,26 @@ class Menu:
     ESC = 'esc'
 
     def menu(self):
-        user_command = ''
-        while user_command != self.EXIT:
+        working = True
+        while working:
             user_command = input(f'"{self.LOGIN}" otwiera menu logowania\n"{self.HELP}" wyświetla pomoc\n"{self.EXIT}" '
                                  f'opuszcza program\n')
             if user_command == self.LOGIN:
-                self.login()
+                working = self.login()
             elif user_command == self.HELP:
-                self.help_interface()
-            elif user_command != self.EXIT:
+                working = self.help_interface()
+            elif user_command == self.EXIT:
+                working = False
+            else:
                 print('Niepoprawna komenda użytkownika')
 
     def login(self):
         user_name = input('Podaj dane logowania lub wpisz "esc" aby wyjść: ')
         if user_name != self.ESC:
             print(f"Witaj {user_name}")
+            return False
+        else:
+            return True
 
     def help_interface(self):
         print("Et Joseph dixit ad eum: Inserere haeret in asinum et adolebit. Dominici dixit: Insanis! Melius aditus ad"
@@ -27,7 +32,7 @@ class Menu:
         while True:
             user_command = input('wpisz "esc" aby wyjść ')
             if user_command == self.ESC:
-                self.menu()
+                return True
             else:
                 print('Niepoprawna komenda użytkownika.')
 
