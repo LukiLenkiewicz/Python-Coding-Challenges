@@ -6,7 +6,7 @@ EXIT_COMMAND = 'exit'
 
 
 def todolist():
-    tasks = creating_new_file()
+    tasks = create_new_file()
     user_command = ''
     while user_command != EXIT_COMMAND:
         print_tasks(tasks)
@@ -15,7 +15,7 @@ def todolist():
         save_task(tasks)
 
 
-def creating_new_file():
+def create_new_file():
     if os.path.exists(JSON_FILE_NAME):
         with open(JSON_FILE_NAME, 'r') as file:
             return json.load(file)
@@ -65,7 +65,7 @@ def print_tasks(tasks):
             print(f"{task_id} {task['Status']} {task['Description']}")
 
 
-def splitting_user_input(command):
+def split_user_input(command):
     command = command.split()
     return command[0], command
 
@@ -75,7 +75,7 @@ def checking_user_input(tasks, user_command):
     REMOVE_TASK_COMMAND = 'remove'
     RESOLVE_TASK_COMMAND = 'resolve'
     PRINT_HELP_COMMAND = 'help'
-    command_check, split_user_command = splitting_user_input(user_command)
+    command_check, split_user_command = split_user_input(user_command)
     if command_check.lower() == ADDING_TASK_COMMAND:
         tasks = add_task(tasks, user_command)
     elif command_check.lower() == REMOVE_TASK_COMMAND:
@@ -83,8 +83,8 @@ def checking_user_input(tasks, user_command):
     elif command_check.lower() == RESOLVE_TASK_COMMAND:
         tasks = resolve_task(split_user_command[1], tasks)
     elif command_check.lower() == PRINT_HELP_COMMAND:
-        print(f'"add + treść zadania" dodaje zadanie\n"remove + ID" usuwa zadanie\n"resolve + ID" oznacza zadanie jako'
-              f' wykonane\nhelp wyświetla pomoc\n')
+        print(f'"add <treść zadania>" dodaje zadanie\n"remove <ID zadania>" usuwa zadanie\n"resolve <ID zadania>" '
+              f'oznacza zadanie jako wykonane\n"exit" opuszcza program\n"help" wyświetla pomoc\n')
     elif user_command == EXIT_COMMAND:
         pass
     else:
