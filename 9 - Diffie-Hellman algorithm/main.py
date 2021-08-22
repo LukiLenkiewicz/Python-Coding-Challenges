@@ -26,7 +26,7 @@ class Diffie:
         user2_number = int(user2_number)
         a = pow(base, user1_number) % self.prime_number
         key = pow(a, user2_number) % self.prime_number
-        print(key)
+        print(f"Wygenerowany sekretny klucz: {key}")
 
     def is_prime_number(self):
         for i in range(2, int(sqrt(self.prime_number))+1):
