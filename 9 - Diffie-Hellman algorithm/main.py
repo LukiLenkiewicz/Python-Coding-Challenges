@@ -17,15 +17,12 @@ class Diffie:
     def input_secret_data(self):
         while not self.user1_number.isdigit():
             self.user1_number = input("Podaj sekrtetną liczbę całkowitą pierwszego użytkownika: ")
-        self.user1_number = int(self.user1_number)
         while not self.user2_number.isdigit():
             self.user2_number = input("Podaj sekretną liczbę drugiego użytkownika: ")
-        self.user2_number = int(self.user2_number)
 
     def input_public_data(self):
         while not self.base.isdigit():
             self.base = input("Podaj podstawę (liczbę całkowitą): ")
-        self.base = int(self.base)
         while True:
             self.prime_number = input("Podaj liczbę pierwszą: ")
             if self.prime_number.isdigit():
@@ -38,8 +35,8 @@ class Diffie:
                 print("Musisz podać liczbę całkowitą")
 
     def calculate_secret_key(self):
-        sent_value = pow(self.base, self.user1_number) % self.prime_number
-        key = pow(sent_value, self.user2_number) % self.prime_number
+        sent_value = pow(int(self.base), int(self.user1_number)) % self.prime_number
+        key = pow(sent_value, int(self.user2_number)) % self.prime_number
         return key
 
     def is_prime_number(self):
