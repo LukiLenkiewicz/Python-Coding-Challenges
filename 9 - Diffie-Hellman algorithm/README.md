@@ -1,1 +1,1 @@
-Implementacja algorytmu Diffiego-Hellmana przy użyciu klasy
+Implementacja algorytmu Diffiego-Hellmana
