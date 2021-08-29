@@ -1,7 +1,7 @@
 from math import sqrt
 
 
-class Diffie:
+class DiffieHellmanAlgorithm:
     def __init__(self):
         self.prime_number = 0
         self.user1_number = ''
@@ -49,5 +49,5 @@ class Diffie:
             return True
 
 
-obj = Diffie()
+obj = DiffieHellmanAlgorithm()
 obj.interface()
