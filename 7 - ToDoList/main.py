@@ -1,5 +1,4 @@
 import json
-import os
 
 JSON_FILE_NAME = 'tasks.json'
 EXIT_COMMAND = 'exit'
@@ -16,10 +15,10 @@ def todolist():
 
 
 def create_new_file():
-    if os.path.exists(JSON_FILE_NAME):
+    try:
         with open(JSON_FILE_NAME, 'r') as file:
             return json.load(file)
-    else:
+    except FileNotFoundError:
         print('Tworzenie pustej listy zadań')
         tasks = {}
         with open(JSON_FILE_NAME, 'w') as file:
@@ -43,6 +42,7 @@ def add_task(tasks, task_description):
 
 
 def remove_task(task_id, tasks):
+    print(task_id)
     if task_id in list(tasks.keys()):
         del tasks[task_id]
         print("Zadanie usunięte z powodzeniem\n")
@@ -53,6 +53,7 @@ def remove_task(task_id, tasks):
 
 
 def resolve_task(task_id, tasks):
+    print(task_id)
     if task_id in list(tasks.keys()):
         tasks[task_id]['Status'] = 'DONE'
         return tasks
@@ -62,9 +63,7 @@ def resolve_task(task_id, tasks):
 
 
 def print_tasks(tasks):
-    if tasks == None:
-        print("Lista zadań nie istnieje")
-    elif len(tasks) == 0:
+    if len(tasks) == 0:
         print("Lista zadań jest pusta.")
     else:
         for task_id, task in tasks.items():
@@ -85,9 +84,15 @@ def checking_user_input(tasks, user_command):
     if command_check.lower() == ADDING_TASK_COMMAND:
         tasks = add_task(tasks, user_command)
     elif command_check.lower() == REMOVE_TASK_COMMAND:
-        tasks = remove_task(split_user_command[1], tasks)
+        try:
+            tasks = remove_task(split_user_command[1], tasks)
+        except IndexError:
+            print("Brak numeru zadania")
     elif command_check.lower() == RESOLVE_TASK_COMMAND:
-        tasks = resolve_task(split_user_command[1], tasks)
+        try:
+            tasks = resolve_task(split_user_command[1], tasks)
+        except IndexError:
+            print("Brak numeru zadania")
     elif command_check.lower() == PRINT_HELP_COMMAND:
         print(f'"add <treść zadania>" dodaje zadanie\n"remove <ID zadania>" usuwa zadanie\n"resolve <ID zadania>" '
               f'oznacza zadanie jako wykonane\n"exit" opuszcza program\n"help" wyświetla pomoc\n')
