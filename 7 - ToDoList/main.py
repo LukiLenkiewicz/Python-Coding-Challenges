@@ -30,12 +30,16 @@ def create_new_file():
 def add_task(tasks, task_description):
     task_id = 1
     while True:
-        if str(task_id) not in list(tasks.keys()):
-            tasks[str(task_id)] = {'Status': 'NEW', 'Description': task_description[4:]}
-            print(f"Zadanie \"{tasks[str(task_id)]['Description']}\" dodane z powodzeniem.\n")
+        if task_description[4:] == "":
+            print("Zadanie musi mieć treść")
             return tasks
         else:
-            task_id += 1
+            if str(task_id) not in list(tasks.keys()):
+                tasks[str(task_id)] = {'Status': 'NEW', 'Description': task_description[4:]}
+                print(f"Zadanie \"{tasks[str(task_id)]['Description']}\" dodane z powodzeniem.\n")
+                return tasks
+            else:
+                task_id += 1
 
 
 def remove_task(task_id, tasks):
@@ -58,7 +62,9 @@ def resolve_task(task_id, tasks):
 
 
 def print_tasks(tasks):
-    if len(tasks) == 0:
+    if tasks == None:
+        print("Lista zadań nie istnieje")
+    elif len(tasks) == 0:
         print("Lista zadań jest pusta.")
     else:
         for task_id, task in tasks.items():
