@@ -8,3 +8,4 @@ class Commands:
         self.REGENERATE_PASSWORD = "regenerate"
         self.DELETE_PASSWORD = "delete"
         self.GET_HELP = "help"
+        self.USER_EXIT_COMMAND = "exit"
