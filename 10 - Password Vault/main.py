@@ -1,5 +1,6 @@
 import json
 import string
+import sys
 from random import randint
 from commands import Commands
 
@@ -11,7 +12,7 @@ class PasswordVault:
 
     def user_interface(self):
         while True:
-            user_input = input("Podaj komendę użytkownika: ")
+            user_input = input('Podaj komendę użytkownika lub wpisz "help" aby uzyskać pomoc: ')
             user_input = user_input.lower()
             user_input_list = user_input.split()
             user_command = user_input_list[0]
@@ -20,11 +21,12 @@ class PasswordVault:
             except IndexError:
                 user_website = None
             self.check_user_command(user_command, user_website)
+            self.save_task()
 
     def check_user_command(self, command, website):
         commands = Commands()
         if command == commands.ADD_WEBSITE:
-            self.add_new_website()
+            self.add_new_website(website)
         elif command == commands.GENERATE_PASSWORD:
             if website is None:
                 print(self.generate_password())
@@ -41,16 +43,24 @@ class PasswordVault:
         elif command == commands.DELETE_PASSWORD:
             self.delete_password(website)
         elif command == commands.GET_HELP:
-            print(f"Sprawdź sobie plik commands bo nie chce mi się pisać")
+            print(f'"add" <nazwa strony> dodaje nową stronę\n"generate" generuje losowe hasło\n'
+                  f'"generate" <nazwa strony> generuje hasło dla danej strony\n'
+                  f'"get" <nazwa strony> zwraca hasło dla konkretnej strony\n'
+                  f'"accounts" zwraca nazwy wszystkich stron dla których zostało'
+                  f'zapisane hasło\nsave <nazwa strony> zapisuje manualnie stworzone'
+                  f'hasło dla konktretnej strony\n"regenerate" tworzy nowe hasło\n'
+                  f'"delete" <nazwa strony> usuwa konto')
+        elif command == commands.USER_EXIT_COMMAND:
+            sys.exit()
         else:
             print("Niepoprawna komenda")
 
-    def add_new_website(self):
-        new_website = input("Podaj nazwę strony:")
+    def add_new_website(self, new_website):
         if new_website in self.passwords:
             print("Strona już została dodana")
         else:
-            self.passwords[new_website] = ""
+            self.passwords[new_website] = None
+            print("Strona dodana z powodzeniem")
 
     def create_new_file(self):
         try:
@@ -65,7 +75,12 @@ class PasswordVault:
 
     def get_saved_password(self, name):
         if name in self.passwords:
-            print(f"Hasło dla {name}: {self.passwords[name]}")
+            if self.passwords[name] is None:
+                print(f"Hasło do strony {name} nie zostało jeszcze dodane")
+            else:
+                print(f"Hasło dla {name}: {self.passwords[name]}")
+        else:
+            print("Taka strona nie została dodana.")
 
     def get_all_accounts(self):
         print(f"Znaleziono {len(self.passwords)} przechowywanych kont:")
@@ -73,10 +88,13 @@ class PasswordVault:
             print(f"-{website}")
 
     def generate_website_password(self, name):
-        self.passwords[name] = self.generate_password()
+        if self.passwords[name] is None:
+            self.passwords[name] = self.generate_password()
+        else:
+            print('Hasło zostało już dodane, użyj komendy "regenerate" aby je zmienić')
 
     def generate_password(self):
-        n = ''
+        n = ""
         while not n.isdigit():
             n = input("Podaj długość hasła: ")
         n = int(n)
@@ -87,7 +105,7 @@ class PasswordVault:
         return password
 
     def regenerate_password(self, website):
-        if website in list(self.passwords.keys()):
+        if website in list(self.passwords.keys()) and self.passwords[website] is not None:
             self.passwords[website] = self.generate_password()
         else:
             print("Taka strona nie została dodana.")
@@ -101,6 +119,10 @@ class PasswordVault:
             print("Strona została usunięta")
         else:
             print("Taka strona nie została dodana")
+
+    def save_task(self):
+        with open(self.JSON_FILE_NAME, 'w') as file:
+            json.dump(self.passwords, file)
 
 
 obj = PasswordVault()
