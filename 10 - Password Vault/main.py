@@ -1,6 +1,7 @@
 import json
 import string
 import sys
+import bcrypt
 from random import randint
 from commands import Commands
 from cryptography.fernet import Fernet
@@ -10,7 +11,6 @@ class PasswordVault:
     def __init__(self):
         self.JSON_FILE_NAME = "hidden_passwords.json"
         self.passwords = self.create_new_file()
-        self.access_password = "1234"
         self.f = self.get_key()
 
     def user_interface(self):
@@ -21,14 +21,21 @@ class PasswordVault:
             self.save_task()
 
     def user_login(self):
+        ACCESS_PASSWORD_FILE_NAME = "access.txt"
+        with open(ACCESS_PASSWORD_FILE_NAME, "r") as text_file:
+            hashed = text_file.read()
+        hashed = hashed.encode()
         access_password = input("Podaj hasło: ")
-        while access_password != self.access_password:
+        access_password = access_password.encode()
+        while not bcrypt.checkpw(access_password, hashed):
             access_password = input("Podałeś złe hasło, spróbuj ponownie: ")
+            access_password = access_password.encode()
 
     def get_key(self):
-        with open('key.txt', 'r') as file_object:
+        KEY_FILE_NAME = "key.txt"
+        with open(KEY_FILE_NAME, "r") as file_object:
             key = file_object.read()
-        key = bytes(key, "utf-8")
+        key = key.encode()
         f = Fernet(key)
         return f
 
