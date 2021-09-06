@@ -49,9 +49,7 @@ class PasswordVault:
             self.add_new_website(website)
         elif command == commands.GENERATE_PASSWORD:
             if website is None:
-                # word = self.generate_password()
-                # print(self.decrypt_password(word))
-                print(self.generate_password())
+                print(self.decrypt_password(self.generate_password()))
             else:
                 self.generate_website_password(website)
         elif command == commands.GET_PASSWORD:
@@ -68,28 +66,29 @@ class PasswordVault:
             print(f'"add" <nazwa strony> dodaje nową stronę\n"generate" generuje losowe hasło\n'
                   f'"generate" <nazwa strony> generuje hasło dla danej strony\n'
                   f'"get" <nazwa strony> zwraca hasło dla konkretnej strony\n'
-                  f'"accounts" zwraca nazwy wszystkich stron dla których zostało'
-                  f'zapisane hasło\nsave <nazwa strony> zapisuje manualnie stworzone'
+                  f'"accounts" zwraca nazwy wszystkich stron dla których zostało '
+                  f'zapisane hasło\nsave <nazwa strony> zapisuje manualnie stworzone '
                   f'hasło dla konktretnej strony\n"regenerate" tworzy nowe hasło\n'
-                  f'"delete" <nazwa strony> usuwa konto')
+                  f'"delete" <nazwa strony> usuwa konto'
+                  f'"exit" opuszcza program')
         elif command == commands.USER_EXIT_COMMAND:
             sys.exit()
         else:
             print("Niepoprawna komenda")
 
     def encrypt_password(self, password):
-        password = bytes(password, "utf-8")
-        password = self.f.encrypt(password)
-        return password
+        password = self.f.encrypt(password.encode())
+        return password.decode()
 
     def decrypt_password(self, password):
-        password = self.f.decrypt(password)
-        password = str(password)
-        return password[2:len(password)-1]
+        password = self.f.decrypt(password.encode())
+        return password.decode()
 
     def add_new_website(self, new_website):
         if new_website in self.passwords:
             print("Strona już została dodana")
+        elif new_website is None:
+            print("Musisz podać nazwę strony")
         else:
             self.passwords[new_website] = None
             print("Strona dodana z powodzeniem")
@@ -106,12 +105,12 @@ class PasswordVault:
             return passwords
 
     def get_saved_password(self, name):
-        if name in self.passwords:
+        if name in self.passwords.keys():
             if self.passwords[name] is None:
                 print(f"Hasło do strony {name} nie zostało jeszcze dodane")
             else:
-                # word = self.decrypt_password(self.passwords[name])
-                print(f"Hasło dla {name}: {self.passwords[name]}")
+                word = self.decrypt_password(self.passwords[name])
+                print(f"Hasło dla {name}: {word}")
         else:
             print("Taka strona nie została dodana.")
 
@@ -124,36 +123,47 @@ class PasswordVault:
             print("Nie dodano jeszcze żadnych kont.")
 
     def generate_website_password(self, name):
-        if self.passwords[name] is None:
-            self.passwords[name] = self.generate_password()
+        if name in self.passwords.keys():
+            if self.passwords[name] is None:
+                self.passwords[name] = self.generate_password()
+                print("Hasło zostało wprowadzone")
+            else:
+                print('Hasło zostało już dodane, użyj komendy "regenerate" aby je zmienić')
         else:
-            print('Hasło zostało już dodane, użyj komendy "regenerate" aby je zmienić')
+            print("Taka strona nie została jeszcze dodana")
 
     def generate_password(self):
-        n = ""
-        while not n.isdigit():
-            n = input("Podaj długość hasła: ")
-        n = int(n)
+        MIN_PASSWORD_LENGTH = 8
+        MAX_PASSWORD_LENGTH = 40
+        n = randint(MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH)
         elements = list(string.ascii_letters + string.digits + string.punctuation)
         password = ""
         for i in range(n):
             password += elements[randint(0, len(elements) - 1)]
-        #password = self.encrypt_password(password)
+        password = self.encrypt_password(password)
         return password
 
     def regenerate_password(self, website):
-        if website in list(self.passwords.keys()) and self.passwords[website] is not None:
+        if not website:
+            print("Musisz podać nazwę jakiejś strony")
+        elif website in list(self.passwords.keys()) and self.passwords[website] is not None:
             self.passwords[website] = self.generate_password()
+            print("Hasło zostało zmienione")
         else:
-            print("Taka strona nie została dodana.")
+            print("Taka strona nie została dodana")
 
     def save_password(self, name):
-        self.passwords[name] = input("Podaj hasło do strony: ")
+        if name in self.passwords.keys():
+            new_password = input("Podaj hasło, które chcesz wprowadzić: ")
+            self.passwords[name] = self.encrypt_password(new_password)
+            print("Hasło zostało wprowadzone")
+        else:
+            print("Taka strona nie istnieje")
 
     def delete_password(self, website):
         if website in list(self.passwords.keys()):
             del self.passwords[website]
-            print("Strona została usunięta")
+            print(f'Strona "{website}" została usunięta')
         else:
             print("Taka strona nie została dodana")
 
