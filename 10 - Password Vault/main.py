@@ -3,25 +3,45 @@ import string
 import sys
 from random import randint
 from commands import Commands
+from cryptography.fernet import Fernet
 
 
 class PasswordVault:
     def __init__(self):
-        self.JSON_FILE_NAME = "hidden.passwords.json"
+        self.JSON_FILE_NAME = "hidden_passwords.json"
         self.passwords = self.create_new_file()
+        self.access_password = "1234"
+        self.f = self.get_key()
 
     def user_interface(self):
+        self.user_login()
         while True:
-            user_input = input('Podaj komendę użytkownika lub wpisz "help" aby uzyskać pomoc: ')
-            user_input = user_input.lower()
-            user_input_list = user_input.split()
-            user_command = user_input_list[0]
-            try:
-                user_website = user_input_list[1]
-            except IndexError:
-                user_website = None
+            user_command, user_website = self.input_user_data()
             self.check_user_command(user_command, user_website)
             self.save_task()
+
+    def user_login(self):
+        access_password = input("Podaj hasło: ")
+        while access_password != self.access_password:
+            access_password = input("Podałeś złe hasło, spróbuj ponownie: ")
+
+    def get_key(self):
+        with open('key.txt', 'r') as file_object:
+            key = file_object.read()
+        key = bytes(key, "utf-8")
+        f = Fernet(key)
+        return f
+
+    def input_user_data(self):
+        user_input = input('Podaj komendę użytkownika lub wpisz "help" aby uzyskać pomoc: ')
+        user_input = user_input.lower()
+        user_input_list = user_input.split()
+        user_command = user_input_list[0]
+        try:
+            user_website = user_input_list[1]
+        except IndexError:
+            user_website = None
+        return user_command, user_website
 
     def check_user_command(self, command, website):
         commands = Commands()
@@ -29,6 +49,8 @@ class PasswordVault:
             self.add_new_website(website)
         elif command == commands.GENERATE_PASSWORD:
             if website is None:
+                # word = self.generate_password()
+                # print(self.decrypt_password(word))
                 print(self.generate_password())
             else:
                 self.generate_website_password(website)
@@ -55,6 +77,16 @@ class PasswordVault:
         else:
             print("Niepoprawna komenda")
 
+    def encrypt_password(self, password):
+        password = bytes(password, "utf-8")
+        password = self.f.encrypt(password)
+        return password
+
+    def decrypt_password(self, password):
+        password = self.f.decrypt(password)
+        password = str(password)
+        return password[2:len(password)-1]
+
     def add_new_website(self, new_website):
         if new_website in self.passwords:
             print("Strona już została dodana")
@@ -78,14 +110,18 @@ class PasswordVault:
             if self.passwords[name] is None:
                 print(f"Hasło do strony {name} nie zostało jeszcze dodane")
             else:
+                # word = self.decrypt_password(self.passwords[name])
                 print(f"Hasło dla {name}: {self.passwords[name]}")
         else:
             print("Taka strona nie została dodana.")
 
     def get_all_accounts(self):
-        print(f"Znaleziono {len(self.passwords)} przechowywanych kont:")
-        for website in self.passwords.keys():
-            print(f"-{website}")
+        if len(self.passwords) > 0:
+            print(f"Znaleziono {len(self.passwords)} przechowywanych kont:")
+            for website in self.passwords.keys():
+                print(f"-{website}")
+        else:
+            print("Nie dodano jeszcze żadnych kont.")
 
     def generate_website_password(self, name):
         if self.passwords[name] is None:
@@ -102,6 +138,7 @@ class PasswordVault:
         password = ""
         for i in range(n):
             password += elements[randint(0, len(elements) - 1)]
+        #password = self.encrypt_password(password)
         return password
 
     def regenerate_password(self, website):
