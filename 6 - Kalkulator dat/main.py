@@ -32,9 +32,7 @@ def is_array_of_integers(arr):
 
 
 def checking_day_correctness(arr):
-    year = int(arr[0])
-    month = int(arr[1])
-    day = int(arr[2])
+    year, month, day = map(int, arr)
 
     if month in range(1, 13):
         if year % 4 == 0 or year % 400 == 0:
