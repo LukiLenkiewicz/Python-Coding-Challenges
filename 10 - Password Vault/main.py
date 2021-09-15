@@ -1,16 +1,15 @@
-import json
 import string
 import sys
 import bcrypt
 from random import randint
 from commands import Commands
+import handling_files
 from cryptography.fernet import Fernet
 
 
 class PasswordVault:
     def __init__(self):
-        self.JSON_FILE_NAME = "hidden_passwords.json"
-        self.passwords = self.create_new_file()
+        self.passwords = handling_files.create_new_file()
         self.f = self.get_key()
 
     def user_interface(self):
@@ -18,18 +17,22 @@ class PasswordVault:
         while True:
             user_command, user_website = self.input_user_data()
             self.check_user_command(user_command, user_website)
-            self.save_task()
+            handling_files.save_task(self.passwords)
 
     def user_login(self):
         ACCESS_PASSWORD_FILE_NAME = "access.txt"
-        with open(ACCESS_PASSWORD_FILE_NAME, "r") as text_file:
-            hashed = text_file.read()
-        hashed = hashed.encode()
-        access_password = input("Podaj hasło: ")
-        access_password = access_password.encode()
-        while not bcrypt.checkpw(access_password, hashed):
-            access_password = input("Podałeś złe hasło, spróbuj ponownie: ")
+        try:
+            with open(ACCESS_PASSWORD_FILE_NAME, "r") as text_file:
+                hashed = text_file.read()
+        except FileNotFoundError:
+            print("Nie znaleziono pliku")
+        else:
+            hashed = hashed.encode()
+            access_password = input("Podaj hasło: ")
             access_password = access_password.encode()
+            while not bcrypt.checkpw(access_password, hashed):
+                access_password = input("Podałeś złe hasło, spróbuj ponownie: ")
+                access_password = access_password.encode()
 
     def get_key(self):
         KEY_FILE_NAME = "key.txt"
@@ -93,17 +96,6 @@ class PasswordVault:
             self.passwords[new_website] = None
             print("Strona dodana z powodzeniem")
 
-    def create_new_file(self):
-        try:
-            with open(self.JSON_FILE_NAME, 'r') as file:
-                return json.load(file)
-        except FileNotFoundError:
-            print("Tworzenie pustej listy haseł")
-            passwords = {}
-            with open(self.JSON_FILE_NAME, 'w') as file:
-                json.dump(passwords, file)
-            return passwords
-
     def get_saved_password(self, name):
         if name in self.passwords.keys():
             if self.passwords[name] is None:
@@ -146,9 +138,12 @@ class PasswordVault:
     def regenerate_password(self, website):
         if not website:
             print("Musisz podać nazwę jakiejś strony")
-        elif website in list(self.passwords.keys()) and self.passwords[website] is not None:
-            self.passwords[website] = self.generate_password()
-            print("Hasło zostało zmienione")
+        elif website in list(self.passwords.keys()):
+            if self.passwords[website] is not None:
+                self.passwords[website] = self.generate_password()
+                print("Hasło zostało zmienione")
+            elif self.passwords[website] is None:
+                print("Hasło do tej strony nie zostało jeszcze dodane")
         else:
             print("Taka strona nie została dodana")
 
@@ -166,10 +161,6 @@ class PasswordVault:
             print(f'Strona "{website}" została usunięta')
         else:
             print("Taka strona nie została dodana")
-
-    def save_task(self):
-        with open(self.JSON_FILE_NAME, 'w') as file:
-            json.dump(self.passwords, file)
 
 
 obj = PasswordVault()
