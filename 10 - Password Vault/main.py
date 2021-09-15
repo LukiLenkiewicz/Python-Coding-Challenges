@@ -70,14 +70,7 @@ class PasswordVault:
         elif command == commands.DELETE_PASSWORD:
             self.delete_password(website)
         elif command == commands.GET_HELP:
-            print(f'"add" <nazwa strony> dodaje nową stronę\n"generate" generuje losowe hasło\n'
-                  f'"generate" <nazwa strony> generuje hasło dla danej strony\n'
-                  f'"get" <nazwa strony> zwraca hasło dla konkretnej strony\n'
-                  f'"accounts" zwraca nazwy wszystkich stron dla których zostało '
-                  f'zapisane hasło\nsave <nazwa strony> zapisuje manualnie stworzone '
-                  f'hasło dla konktretnej strony\n"regenerate" tworzy nowe hasło\n'
-                  f'"delete" <nazwa strony> usuwa konto'
-                  f'"exit" opuszcza program')
+            print(commands.HELP_COMMAND_CONTENT)
         elif command == commands.USER_EXIT_COMMAND:
             sys.exit()
         else:
