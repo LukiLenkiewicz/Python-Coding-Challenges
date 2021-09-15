@@ -4,13 +4,12 @@ import bcrypt
 from random import randint
 from commands import Commands
 import handling_files
-from cryptography.fernet import Fernet
 
 
 class PasswordVault:
     def __init__(self):
         self.passwords = handling_files.create_new_file()
-        self.f = self.get_key()
+        self.f = handling_files.get_key()
 
     def user_interface(self):
         self.user_login()
@@ -34,14 +33,6 @@ class PasswordVault:
                 access_password = input("Podałeś złe hasło, spróbuj ponownie: ")
                 access_password = access_password.encode()
 
-    def get_key(self):
-        KEY_FILE_NAME = "key.txt"
-        with open(KEY_FILE_NAME, "r") as file_object:
-            key = file_object.read()
-        key = key.encode()
-        f = Fernet(key)
-        return f
-
     def input_user_data(self):
         user_input = input('Podaj komendę użytkownika lub wpisz "help" aby uzyskać pomoc: ')
         user_input = user_input.lower()
@@ -55,12 +46,11 @@ class PasswordVault:
 
     def check_user_command(self, command, website):
         commands = Commands()
-        if command == commands.ADD_WEBSITE:
-            self.add_new_website(website)
-        elif command == commands.GENERATE_PASSWORD:
+        if command == commands.GENERATE_PASSWORD:
             if website is None:
                 print(self.decrypt_password(self.generate_password()))
             else:
+                self.add_new_website(website)
                 self.generate_website_password(website)
         elif command == commands.GET_PASSWORD:
             self.get_saved_password(website)
