@@ -4,6 +4,7 @@ import bcrypt
 from random import randint
 from commands import Commands
 import handling_files
+import sqlite3
 
 
 class PasswordVault:
@@ -16,13 +17,17 @@ class PasswordVault:
         while True:
             user_command, user_website = self.input_user_data()
             self.check_user_command(user_command, user_website)
-            handling_files.save_task(self.passwords)
+            handling_files.save_passwords(self.passwords)
 
     def user_login(self):
-        ACCESS_PASSWORD_FILE_NAME = "access.txt"
+        ACCESS_PASSWORD_FILE_NAME = "keys.db"
+        passwords_connect = sqlite3.connect(ACCESS_PASSWORD_FILE_NAME)
+        cur = passwords_connect.cursor()
         try:
-            with open(ACCESS_PASSWORD_FILE_NAME, "r") as text_file:
-                hashed = text_file.read()
+            cur.execute("SELECT * FROM access_key_table")
+            hashed = cur.fetchall()
+            hashed = hashed[0][0]
+            passwords_connect.close()
         except FileNotFoundError:
             print("Nie znaleziono pliku")
         else:
@@ -32,6 +37,7 @@ class PasswordVault:
             while not bcrypt.checkpw(access_password, hashed):
                 access_password = input("Podałeś złe hasło, spróbuj ponownie: ")
                 access_password = access_password.encode()
+            print("Dostęp przyznany")
 
     def input_user_data(self):
         user_input = input('Podaj komendę użytkownika lub wpisz "help" aby uzyskać pomoc: ')
@@ -48,7 +54,7 @@ class PasswordVault:
         commands = Commands()
         if command == commands.GENERATE_PASSWORD:
             if website is None:
-                print(self.decrypt_password(self.generate_password()))
+                print(f"Wygenerowane hasło {self.decrypt_password(self.generate_password())}")
             else:
                 self.add_new_website(website)
                 self.generate_website_password(website)
