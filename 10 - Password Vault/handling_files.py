@@ -1,9 +1,11 @@
 import sqlite3
 from cryptography.fernet import Fernet
+import bcrypt
 
-DATABASE_NAME = "passwords.db"
+PASSWORDS_DATABASE = "passwords.db"
+KEY_ACCESS_DATABASE = "keys.db"
 
-conn = sqlite3.connect(DATABASE_NAME)
+conn = sqlite3.connect(PASSWORDS_DATABASE)
 c = conn.cursor()
 
 
@@ -38,8 +40,7 @@ def save_passwords(passwords):
 
 
 def get_key():
-    ACCESS_PASSWORD_FILE_NAME = "keys.db"
-    conn = sqlite3.connect(ACCESS_PASSWORD_FILE_NAME)
+    conn = sqlite3.connect(KEY_ACCESS_DATABASE)
     cur = conn.cursor()
     try:
         cur.execute("SELECT * FROM password_key_table")
@@ -52,3 +53,27 @@ def get_key():
         key = key.encode()
         f = Fernet(key)
         return f
+
+
+def user_login():
+    conn = sqlite3.connect(KEY_ACCESS_DATABASE)
+    cur = conn.cursor()
+    try:
+        cur.execute("SELECT * FROM access_key_table")
+        hashed = cur.fetchall()
+        hashed = hashed[0][0]
+        conn.close()
+    except FileNotFoundError:
+        print("Nie znaleziono pliku")
+    else:
+        check_password_corectness(hashed)
+
+
+def check_password_corectness(hashed):
+    hashed = hashed.encode()
+    access_password = input("Podaj hasło: ")
+    access_password = access_password.encode()
+    while not bcrypt.checkpw(access_password, hashed):
+        access_password = input("Podałeś złe hasło, spróbuj ponownie: ")
+        access_password = access_password.encode()
+    print("Dostęp przyznany")
