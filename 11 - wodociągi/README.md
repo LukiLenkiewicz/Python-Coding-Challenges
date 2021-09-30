@@ -1,0 +1,1 @@
+Rozwiązanie zadania maturalnego przy pomocy Pythona i bibliotek: Pandas, Matplotlib oraz Numpy. 
