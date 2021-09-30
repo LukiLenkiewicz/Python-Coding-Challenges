@@ -1,43 +1,22 @@
 import string
 import sys
-import bcrypt
 from random import randint
-from commands import Commands
-import handling_files
-import sqlite3
+import commands
+import file_handler
+from constants import MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH
 
 
 class PasswordVault:
     def __init__(self):
-        self.passwords = handling_files.create_new_file()
-        self.f = handling_files.get_key()
+        file_handler.user_login()
+        self.passwords = file_handler.create_new_file()
+        self.f = file_handler.get_key()
 
     def user_interface(self):
-        self.user_login()
         while True:
             user_command, user_website = self.input_user_data()
             self.check_user_command(user_command, user_website)
-            handling_files.save_passwords(self.passwords)
-
-    def user_login(self):
-        ACCESS_PASSWORD_FILE_NAME = "keys.db"
-        passwords_connect = sqlite3.connect(ACCESS_PASSWORD_FILE_NAME)
-        cur = passwords_connect.cursor()
-        try:
-            cur.execute("SELECT * FROM access_key_table")
-            hashed = cur.fetchall()
-            hashed = hashed[0][0]
-            passwords_connect.close()
-        except FileNotFoundError:
-            print("Nie znaleziono pliku")
-        else:
-            hashed = hashed.encode()
-            access_password = input("Podaj hasło: ")
-            access_password = access_password.encode()
-            while not bcrypt.checkpw(access_password, hashed):
-                access_password = input("Podałeś złe hasło, spróbuj ponownie: ")
-                access_password = access_password.encode()
-            print("Dostęp przyznany")
+            file_handler.save_passwords(self.passwords)
 
     def input_user_data(self):
         user_input = input('Podaj komendę użytkownika lub wpisz "help" aby uzyskać pomoc: ')
@@ -51,7 +30,6 @@ class PasswordVault:
         return user_command, user_website
 
     def check_user_command(self, command, website):
-        commands = Commands()
         if command == commands.GENERATE_PASSWORD:
             if website is None:
                 print(f"Wygenerowane hasło {self.decrypt_password(self.generate_password())}")
@@ -121,8 +99,6 @@ class PasswordVault:
             print("Taka strona nie została jeszcze dodana")
 
     def generate_password(self):
-        MIN_PASSWORD_LENGTH = 8
-        MAX_PASSWORD_LENGTH = 40
         n = randint(MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH)
         elements = list(string.ascii_letters + string.digits + string.punctuation)
         password = ""
