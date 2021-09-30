@@ -1,9 +1,8 @@
 import sqlite3
 from cryptography.fernet import Fernet
 import bcrypt
+from constants import PASSWORDS_DATABASE, KEY_ACCESS_DATABASE
 
-PASSWORDS_DATABASE = "passwords.db"
-KEY_ACCESS_DATABASE = "keys.db"
 
 conn = sqlite3.connect(PASSWORDS_DATABASE)
 c = conn.cursor()
