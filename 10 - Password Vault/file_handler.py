@@ -1,14 +1,14 @@
 import sqlite3
 from cryptography.fernet import Fernet
 import bcrypt
-from constants import PASSWORDS_DATABASE, KEY_ACCESS_DATABASE
+from constants import PASSWORDS_DATABASE, KEY_ACCESS_DATABASE, PASSWORD_KEY_TABLE_NAME, ACCESS_KEY_TABLE_NAME
 
 
 conn = sqlite3.connect(PASSWORDS_DATABASE)
 c = conn.cursor()
 
 
-def create_new_file():
+def get_passwords():
     try:
         c.execute("SELECT * FROM passwords")
     except sqlite3.OperationalError:
@@ -19,9 +19,7 @@ def create_new_file():
             )""")
         return {}
     else:
-        data = c.fetchall()
-        data = turn_into_dictionary(data)
-        return data
+        return turn_into_dictionary(c.fetchall())
 
 
 def turn_into_dictionary(data):
@@ -39,33 +37,28 @@ def save_passwords(passwords):
 
 
 def get_key():
+    key = load_file(PASSWORD_KEY_TABLE_NAME)
+    key = key.encode()
+    return Fernet(key)
+
+
+def user_login():
+    hashed = load_file(ACCESS_KEY_TABLE_NAME)
+    check_password_corectness(hashed)
+
+
+def load_file(table_name):
     conn = sqlite3.connect(KEY_ACCESS_DATABASE)
     cur = conn.cursor()
     try:
-        cur.execute("SELECT * FROM password_key_table")
+        cur.execute("SELECT * FROM "+table_name+"")
         key = cur.fetchall()
         key = key[0][0]
         conn.close()
     except FileNotFoundError:
-        print("Nie znaleziono klucza")
-    else:
-        key = key.encode()
-        f = Fernet(key)
-        return f
-
-
-def user_login():
-    conn = sqlite3.connect(KEY_ACCESS_DATABASE)
-    cur = conn.cursor()
-    try:
-        cur.execute("SELECT * FROM access_key_table")
-        hashed = cur.fetchall()
-        hashed = hashed[0][0]
-        conn.close()
-    except FileNotFoundError:
         print("Nie znaleziono pliku")
     else:
-        check_password_corectness(hashed)
+        return key
 
 
 def check_password_corectness(hashed):
