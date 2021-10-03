@@ -31,7 +31,9 @@ def table_of_months(df):
 
 def water_use_in_month(df):
     df = df.groupby('Dzielnica').mean().reset_index()
+    df.pop("Liczba Mieszkańców")
     df.set_index("Dzielnica").T.plot(kind='bar', stacked=False, title="Średnie zużycie wody w danej dzielnicy w ciągu miesiąca.")
+    plt.legend(loc="upper right")
 
 
 def water_use_per_inhabitant(df, no_of_people):
@@ -41,7 +43,7 @@ def water_use_per_inhabitant(df, no_of_people):
 
 def pie_chart(df):
     label = ["" for _ in range(12)]
-    df.plot(y="Zużycie wody", autopct="%.2f", labels=label, kind='pie')
+    df.plot(y="Zużycie wody", autopct="%1.2f%%", labels=label, kind='pie')
     plt.legend(df["Miesiąc"])
 
 
