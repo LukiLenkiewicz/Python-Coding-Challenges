@@ -1,1 +1,1 @@
-Rozwiązanie zadania maturalnego przy pomocy Pythona i bibliotek: Pandas, Matplotlib oraz Numpy. 
+Rozwiązanie zadania maturalnego przy pomocy Pythona i bibliotek: Pandas oraz Matplotlib.
