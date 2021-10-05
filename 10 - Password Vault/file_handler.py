@@ -1,19 +1,20 @@
 import sqlite3
 from cryptography.fernet import Fernet
 import bcrypt
-from constants import PASSWORDS_DATABASE, KEY_ACCESS_DATABASE, PASSWORD_KEY_TABLE_NAME, ACCESS_KEY_TABLE_NAME
-
+from constants import PASSWORDS_DATABASE, KEY_ACCESS_DATABASE, PASSWORD_KEY_TABLE_NAME, ACCESS_KEY_TABLE_NAME, \
+    TABLE_NAME
 
 conn = sqlite3.connect(PASSWORDS_DATABASE)
 c = conn.cursor()
 
 
 def get_passwords():
+
     try:
-        c.execute("SELECT * FROM passwords")
+        c.execute("SELECT * FROM "+TABLE_NAME+"")
     except sqlite3.OperationalError:
         print("Tworzenie nowej tabeli")
-        c.execute("""CREATE TABLE passwords (
+        c.execute("""CREATE TABLE "+TABLE_NAME+" (
                 website_name text,
                 website_password text
             )""")
@@ -31,8 +32,8 @@ def turn_into_dictionary(data):
 
 def save_passwords(passwords):
     passwords = passwords.items()
-    c.execute("DELETE FROM passwords")
-    c.executemany("INSERT INTO passwords VALUES (?, ?)", passwords)
+    c.execute("DELETE FROM "+TABLE_NAME+"")
+    c.executemany("INSERT INTO "+TABLE_NAME+" VALUES (?, ?)", passwords)
     conn.commit()
 
 
