@@ -1,0 +1,1 @@
+Program that will send current stock price of Jastrzebska Spolka Weglowa every day at 12 o'clock. 
